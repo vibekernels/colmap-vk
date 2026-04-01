@@ -66,8 +66,8 @@ The script runs 7 steps end-to-end:
 
 | Step | What it does | GPU? |
 |------|-------------|------|
-| 1. Frame extraction | Extracts frames from video at 2fps, scaled to 500px | No (ffmpeg) |
-| 2. Feature extraction | SIFT features (2048 per image) | Yes |
+| 1. Frame extraction | Extracts frames from video at 2fps, scaled to 1000px | No (ffmpeg) |
+| 2. Feature extraction | SIFT features at 500px (2048 per image) | Yes |
 | 3. Sequential matching | Matches adjacent frames (overlap=5) | Yes |
 | 4. Global mapper | GLOMAP global SfM (solves all poses at once) | No |
 | 5. Undistortion | Removes lens distortion for dense stereo | No |
@@ -80,14 +80,14 @@ The script runs 7 steps end-to-end:
 |------|------|
 | Frame extraction | 3s |
 | Feature extraction | 8s |
-| Sequential matching | 10s |
-| Global mapper (GLOMAP) | 13s |
-| Undistortion | 2s |
-| PatchMatch stereo | 19s |
-| Depth fusion | 2s |
-| **Total** | **~57s** |
+| Sequential matching | 11s |
+| Global mapper (GLOMAP) | 7s |
+| Undistortion | 3s |
+| PatchMatch stereo | 26s |
+| Depth fusion | 5s |
+| **Total** | **~64s** |
 
-Result: 122/122 frames registered, ~1M point dense cloud with color.
+Result: 122/122 frames registered, ~3.8M point dense cloud at 1000px with color.
 
 ### Tuning
 
@@ -95,8 +95,10 @@ Edit the variables at the top of `scripts/fast_pipeline.sh`:
 
 - **`FPS`** (default: 2) — Frame extraction rate. Higher = more frames = better
   quality but slower. 1-3 is good for handheld video.
-- **`MAX_IMG`** (default: 500) — Max image dimension in pixels. Directly affects
-  PatchMatch speed. 500 is fast; 800-1000 gives higher quality depth.
+- **`MAX_IMG`** (default: 1000) — Max image dimension for dense reconstruction.
+  Directly affects PatchMatch speed and depth map resolution.
+- **`FEAT_IMG`** (default: 500) — Max image dimension for feature extraction.
+  Kept lower than `MAX_IMG` since SfM doesn't need full resolution.
 - **`MAX_FEAT`** (default: 2048) — Max SIFT features per image. More features =
   better matching but slower extraction/matching.
 - **`OVERLAP`** (default: 5) — Sequential matching window. How many adjacent

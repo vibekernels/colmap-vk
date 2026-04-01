@@ -57,7 +57,7 @@ struct CeresBundleAdjustmentOptions {
   // Typically, the GPU is faster for large problems but the overhead of
   // transferring memory from the CPU to the GPU leads to better CPU performance
   // for small problems. This depends on the specific problem and hardware.
-  int min_num_images_gpu_solver = 50;
+  int min_num_images_gpu_solver = 200;
 
   // Heuristic threshold on the minimum number of residuals to enable
   // multi-threading. Note that single-threaded is typically better for small
